@@ -1,0 +1,30 @@
+{
+  "name": "choudhary-siddharth-lab2",
+  "version": "1.0.0",
+  "description": "lab2 to demonstrate sass and screen compatibility",
+  "main": "index.js",
+  "browserslist": [
+    "last 1 version",
+    "> 1%",
+    "maintained node versions",
+    "not dead"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Siddharth Choudhary",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.0",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "jquery": "^3.4.1",
+    "sass": "^1.22.12"
+  }
+}
