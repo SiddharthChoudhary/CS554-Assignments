@@ -6,10 +6,19 @@ let images=[];
 class Popularity extends Component{
     constructor(props){
         super(props);
-        // this.state={
-            //     pageNum:
-            // }
+        this.state={
+                mainstream:true,
+                total:0
+            }
+            this.handleMainStream=this.handleMainStream.bind(this);
         }
+    handleMainStream(data){
+        let temp=0;
+        data.getTopTenBinnedPosts.map((value,index)=>{
+            temp+=value.numBinned
+        })
+        this.state.total=temp
+    }
 render(){
     return(
         <div>
@@ -17,12 +26,14 @@ render(){
                         {({loading,error,data})=>{
                             console.log("Data is",data)
                             if(loading) return <h1>loading...</h1>
-                        if(error) return <h1>Error:{error}</h1>
+                            if(error) return <h1>Error:{error}</h1>
                             if(!data.getTopTenBinnedPosts){
                                 return <h1>Data is null</h1>
                             }else{
+                                this.handleMainStream(data)
                                 return (
                                     <Container>
+                                        <div><h2>{this.state.total>200?"MAINSTREAM":"NON-MAINSTREAM"}</h2></div>
                                         <div class="row">
                                         {
                                         data.getTopTenBinnedPosts.map((value,index)=>{
