@@ -15,6 +15,7 @@ type Query {
   unsplashImages(pageNum:Int):[ImagePost]
   binnedImages:[ImagePost]
   userPostedImages:[ImagePost]
+  getTopTenBinnedPosts:[ImagePost]
 }
 type ImagePost {
   id: ID!
@@ -23,10 +24,11 @@ type ImagePost {
   description: String
   user_posted: Boolean!
   binned: Boolean!
+  numBinned:Int!
 }
 type Mutation {
   uploadImage(url: String!, description: String, posterName: String):ImagePost
-  updateImage(id: ID!, url: String, posterName: String, description: String, user_posted: Boolean, binned: Boolean):ImagePost
+  updateImage(id: ID!, url: String, posterName: String, description: String, user_posted: Boolean, binned: Boolean,numBinned:Int):ImagePost
   deleteImage(id: ID!): ImagePost
 }
 `;
@@ -57,7 +59,8 @@ const resolvers = {
                       posterName:response.user.name,
                       description:description,
                       user_posted:false,
-                      binned:false
+                      binned:false,
+                      numBinned:response.likes
                     }
                     images.push(image);
                   }
@@ -82,7 +85,8 @@ const resolvers = {
                     posterName:posted_images.posterName,
                     description:posted_images.description,
                     user_posted:posted_images.user_posted,
-                    binned:posted_images.binned
+                    binned:posted_images.binned,
+                    numBinned:posted_images.numBinned?posted_images.numBinned:0
                   }
                   image.push(img)
                   }
@@ -106,13 +110,37 @@ const resolvers = {
                     posterName:posted_images.posterName,
                     description:posted_images.description,
                     user_posted:posted_images.user_posted,
-                    binned:posted_images.binned
+                    binned:posted_images.binned,
+                    numBinned:posted_images.numBinned?posted_images.numBinned:0
                   }
                   image.push(img)
                 }
                 }
           }
         return image;
+        },
+        getTopTenBinnedPosts:async()=>{
+          let images = await client.lrangeAsync("images",0,-1);
+          let toptenItems=[];
+          if(!images){
+            //no uploads
+          }else{
+            for(let i=0;i<10;i++){
+              let max=0,item={},index=0,j=0;
+              for(j in images){
+                  let obj=JSON.parse(images[j]);
+                  obj.numBinned=obj.numBinned?obj.numBinned:0
+                  if(max<=obj.numBinned){
+                    max=obj.numBinned;
+                    item=obj;
+                    index=j;
+                  }
+                }
+              toptenItems.push(item);
+                images[index]=0;
+            }
+            return await toptenItems;
+        }
         }
   },
   Mutation: {
@@ -124,7 +152,8 @@ const resolvers = {
         posterName: args.posterName,
         description: args.description,
         user_posted:true,
-        binned:false
+        binned:false,
+        numBinned:0
       };
       try{
         let ifIdinCache = await client.getAsync(id);
@@ -138,14 +167,14 @@ const resolvers = {
     },
     updateImage:async (_, args) => {
       //create newObj
-      console.log("I Came in");
       const newObj={
         id:args.id,
         url:args.url,
         posterName:args.posterName,
         description:args.description,
         user_posted:args.user_posted,
-        binned:args.binned
+        binned:args.binned,
+        numBinned:args.numBinned
       }
       //if user has binned the image  
       if(args.binned){
@@ -217,7 +246,8 @@ const resolvers = {
                 posterName:posted_images.posterName,
                 description:posted_images.description,
                 user_posted:posted_images.user_posted,
-                binned:posted_images.binned
+                binned:posted_images.binned,
+                numBinned:posted_images.numBinned?posted_images.numBinned:0
               }
               let obj=JSON.stringify(img);
               await client.lrem("images",0,obj);

@@ -48,7 +48,8 @@ render(){
                                                                         posterName:value.posterName,
                                                                         description:value.description,
                                                                         user_posted:value.user_posted,
-                                                                        binned:true
+                                                                        binned:true,
+                                                                        numBinned:value.numBinned
                                                                         }
                                                                     })
                                                                     if(errorImage) alert(error)

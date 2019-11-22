@@ -37,6 +37,7 @@ render(){
                                         <div class="row">
                                         {
                                         data.unsplashImages.map((value,index)=>{
+                                            console.log(value);
                                             return <div class="col">
                                                 <Form onSubmit={
                                                             e=>{
@@ -48,7 +49,8 @@ render(){
                                                                        posterName:value.posterName,
                                                                        description:value.description,
                                                                        user_posted:value.user_posted,
-                                                                       binned:true
+                                                                       binned:true,
+                                                                       numBinned:value.numBinned
                                                                     }
                                                                 })
                                                                 if(error) alert(error)
@@ -57,7 +59,7 @@ render(){
                                                         }><Card style={{ marginTop:'100px',width: '25rem',background:'white'}}>
                                                             <Card.Img variant="top" src={value.url} style={{height:"500px"}} />
                                                             <Card.Body style={{padding:'inherit'}}>
-                                                            <Card.Title>Poster's Name: {value.poster_name}</Card.Title>
+                                                    <Card.Title>Poster's Name: {value.poster_name}{value.numBinned}</Card.Title>
                                                             <Card.Text>
                                                                 Description  {value.description?value.description:"Well Actually Nothing"}
                                                             </Card.Text>

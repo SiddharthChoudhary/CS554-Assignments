@@ -11,6 +11,7 @@ const GET_IMAGES = gql`
       description
       user_posted
       binned
+      numBinned
     }
   }
 `;
@@ -23,9 +24,25 @@ query {
     description
     user_posted
     binned
+    numBinned
   }
 }
 `;
+
+const POPULARITY=gql`
+query{
+  getTopTenBinnedPosts{
+    id
+    url
+    posterName
+    description
+    user_posted
+    binned
+  }
+}
+`;
+
+
 const GET_IMAGES_MY_BIN = gql`
 query {
   binnedImages{
@@ -35,6 +52,7 @@ query {
     description
     user_posted
     binned
+    numBinned
   }
 }
 `;
@@ -51,19 +69,21 @@ mutation uploadImage(
     description
     user_posted
     binned
+    numBinned
   }
 }`;
 
 
 const UPDATE_IMAGE=gql`
-mutation updateImage($id: ID!, $url: String, $posterName: String, $description: String, $user_posted: Boolean, $binned: Boolean){
-         updateImage(id: $id, url: $url, posterName: $posterName,description: $description, user_posted: $user_posted, binned: $binned){
+mutation updateImage($id: ID!, $url: String, $posterName: String, $description: String, $user_posted: Boolean, $binned: Boolean,$numBinned:Int){
+         updateImage(id: $id, url: $url, posterName: $posterName,description: $description, user_posted: $user_posted, binned: $binned,numBinned:$numBinned){
       id
       url
       posterName
       description
       user_posted
       binned
+      numBinned
     }
 }`;
 
@@ -76,8 +96,10 @@ const DELETE_IMAGE=gql`
         description
         user_posted
         binned
+        numBinned
       }
   }`;
+
 
 export default {
     GET_IMAGES,
@@ -85,5 +107,6 @@ export default {
     GET_IMAGES_MY_POSTS,
     GET_IMAGES_MY_BIN,
     UPDATE_IMAGE,
-    DELETE_IMAGE
+    DELETE_IMAGE,
+    POPULARITY
 };
