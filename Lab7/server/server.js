@@ -150,6 +150,7 @@ const resolvers = {
       //if user has binned the image  
       if(args.binned){
         let found = false;
+        let ImageInCache;
         let images = await client.lrangeAsync("images",0,-1);
         if(!images){
           //no uploads
@@ -159,11 +160,22 @@ const resolvers = {
               let posted_images=JSON.parse(images[i])
               if(posted_images.id===args.id){
                 found=true;
+                ImageInCache=posted_images;
               }
             }
           //if it's not in cache, i.e., found is false then add in the cache
           if(!found){
             client.lpush("images",JSON.stringify(newObj),redis.print);
+          }else if(found && args.binned && !ImageInCache.binned){
+            //that means it's in the cache and user wants to bin it, so update images array with binned=true
+            newObj.binned=ImageInCache.binned
+            let obj=JSON.stringify(newObj);
+            //first remove the object
+            await client.lrem("images",0,obj);
+            //and then add a new object with inverse binned value
+            newObj.binned=!newObj.binned;
+            obj = JSON.stringify(newObj);
+            await client.lpush("images",obj);
           }   
        }
      } //i.e., if the image is unbinned

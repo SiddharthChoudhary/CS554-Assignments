@@ -67,10 +67,23 @@ mutation updateImage($id: ID!, $url: String, $posterName: String, $description: 
     }
 }`;
 
+const DELETE_IMAGE=gql`
+  mutation deleteImage($id: ID!){
+      deleteImage(id: $id){
+        id
+        url
+        posterName
+        description
+        user_posted
+        binned
+      }
+  }`;
+
 export default {
     GET_IMAGES,
     UPLOAD_IMAGE,
     GET_IMAGES_MY_POSTS,
     GET_IMAGES_MY_BIN,
-    UPDATE_IMAGE
+    UPDATE_IMAGE,
+    DELETE_IMAGE
 };
