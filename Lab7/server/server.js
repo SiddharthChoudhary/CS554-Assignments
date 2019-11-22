@@ -203,6 +203,7 @@ const resolvers = {
     deleteImage:async (_, args) => {
         // return lodash.remove(employees, e => e.id == args.id);
         let images = await client.lrangeAsync("images",0,-1);
+        let img;
         if(!images){
           //no uploads
         }else{
@@ -210,7 +211,7 @@ const resolvers = {
           for(let i in images){
             let posted_images=JSON.parse(images[i])
             if(posted_images.id===args.id){
-              const img={
+              img={
                 id:posted_images.id,
                 url:posted_images.url,
                 posterName:posted_images.posterName,
@@ -218,9 +219,9 @@ const resolvers = {
                 user_posted:posted_images.user_posted,
                 binned:posted_images.binned
               }
+              let obj=JSON.stringify(img);
+              await client.lrem("images",0,obj);
             }
-            let obj=JSON.stringify(img);
-            await client.lrem("images",0,obj);
             };
           }
       if(!await client.getAsync(args.id)){
@@ -228,6 +229,7 @@ const resolvers = {
       }else{
         client.del(args.id);
       }
+      return img;
     }
   }
 };

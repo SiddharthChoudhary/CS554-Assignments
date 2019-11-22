@@ -1,5 +1,7 @@
 .App {
-  text-align: center;
+  text-align: center;  
+  background-color: #282c34 !important;
+
 }
 
 .App-logo {
@@ -21,8 +23,3 @@
   color: #09d3ac;
 }
 
-.navbar-nav{
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-}

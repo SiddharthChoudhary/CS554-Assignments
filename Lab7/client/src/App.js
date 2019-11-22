@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+import logo from './icon.png';
 import Home from './components/home'
 import MyBin from './components/mybin'
 import MyPosts from './components/myposts'
@@ -15,8 +15,12 @@ function App() {
       <header className="App-header">
           <div>
             <Router>
-              <Container>
-                <Row className="header" style={{display:'flex'}}>
+              <Container style={{marginBottom:'20px'}}>
+                <Row className="header" style={{display:'flex',fontSize:'large'}}>
+                  <Col>
+                    <Link to="/"><img src={logo} small></img></Link>
+                  </Col>
+                  <Col></Col>
                   <Col>
                     <Link to="/mybin">My Bin</Link>
                   </Col>
@@ -25,6 +29,8 @@ function App() {
                   <Col>
                     <Link to="/newpost">New Post</Link>
                   </Col>
+                  <Col></Col>
+                  <Col></Col>
                 </Row>
               </Container>
               <Switch>

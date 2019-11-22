@@ -29,9 +29,9 @@ render(){
                                         <div class="row">
                                         {
                                         data.binnedImages.map((value,index)=>{
-                                            return <div class="col"><Card style={{ marginTop:'100px',width: '25rem',height:"650px",background:'white'}}>
+                                            return <div class="col"><Card style={{ marginTop:'100px',marginBottom:'100px',width: '25rem',background:'white'}}>
                                             <Card.Img variant="top" src={value.url} style={{height:"500px"}} />
-                                            <Card.Body>
+                                            <Card.Body style={{padding:'inherit'}}>
                                             <Card.Title>Poster's Name: {value.poster_name}</Card.Title>
                                             <Card.Text>
                                                 Description  {value.description?value.description:"Well Actually Nothing"}
@@ -49,6 +49,8 @@ render(){
                                                                        binned:false
                                                                     }
                                                                 })
+                                                                if(error) alert(error)
+                                                                if(data.binnedImages){ alert("Deleted From bin, Reload to see changes")}
                                                             }}>
                                             <Button variant="danger" type="submit">Delete From Bin</Button>
                                             </Form>

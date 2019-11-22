@@ -51,6 +51,7 @@ render(){
                                 })
                                 if(error) alert(error);
                                 alert("Uploaded");
+                                return true;
                             }
                         }>
                                 <Form.Group controlId="imageUrl">

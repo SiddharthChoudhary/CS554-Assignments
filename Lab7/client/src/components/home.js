@@ -1,30 +1,22 @@
 import React, { Component } from "react";
 import { Query,Mutation } from "react-apollo";
+import {BrowserRouter as Router,Route,Link,Switch} from 'react-router-dom'
 import {Grid,Col,Row,Form,Container,Card, Button} from 'react-bootstrap';
 import queries from '../queries'
 let images=[];
 class Home extends Component{
     constructor(props){
         super(props);
-        // this.state={
-            //     pageNum:
-            // }
+        this.state={
+            pageNum:1
         }
-displayImages(imageArray){
-    for(let i of imageArray){
-        images.push("<Col>"+
-        +"<Card style={{ width: '18rem' }}>"
-        +"<Card.Img variant='top' src="+i.url+" />"
-        +"<Card.Body>"
-            +"<Card.Title>"+i.poster_name+"</Card.Title>"
-            +"<Card.Text>"
-            +i.description+
-            +"the card's content."
-            +"</Card.Text>"
-            // +"<Button variant='primary'>"+i.binned?"Binned":"Not Binned"+"</Button>"
-        +"</Card.Body>"
-        +"</Card></Col>")
+        this.handleShowMore=this.handleShowMore.bind(this);
     }
+handleShowMore=()=>{
+    console.log("Page Num is",this.state.pageNum);
+    this.setState({
+        pageNum:this.state.pageNum+1
+    })
 }
 render(){
     return(
@@ -32,7 +24,7 @@ render(){
             <Mutation mutation={queries.UPDATE_IMAGE}>
                 {(update_image,{loading,error,data})=>
                 (
-                    <Query asyncMode query={queries.GET_IMAGES} variables={{pageNum: 1}}>
+                    <Query asyncMode query={queries.GET_IMAGES} variables={{pageNum: this.state.pageNum}}>
                         {({loading,error,data})=>{
                             if(loading) return <h1>loading...</h1>
                             if(error) return console.log(error)
@@ -40,7 +32,6 @@ render(){
                                 console.log("Image is null")
                                 return <h1>Data is null</h1>
                             }else{
-                                this.displayImages(data.unsplashImages)
                                 return (                     
                                     <Container>
                                         <div class="row">
@@ -60,10 +51,12 @@ render(){
                                                                        binned:true
                                                                     }
                                                                 })
+                                                                if(error) alert(error)
+                                                                alert("Added to Bin, Reload to see changes")
                                                             }
-                                                        }><Card style={{ marginTop:'100px',width: '25rem',height:"650px",background:'white'}}>
+                                                        }><Card style={{ marginTop:'100px',width: '25rem',background:'white'}}>
                                                             <Card.Img variant="top" src={value.url} style={{height:"500px"}} />
-                                                            <Card.Body>
+                                                            <Card.Body style={{padding:'inherit'}}>
                                                             <Card.Title>Poster's Name: {value.poster_name}</Card.Title>
                                                             <Card.Text>
                                                                 Description  {value.description?value.description:"Well Actually Nothing"}
@@ -76,6 +69,13 @@ render(){
                                         })
                                         }
                                         </div>
+                                        <Row><Col><h1></h1></Col></Row>
+                                        <Row><Col><h1></h1></Col></Row>
+                                        <Row >
+                                            <Col>
+                                            <Button size="lg" variant="danger" block onClick={()=>this.handleShowMore()}>Show More</Button> 
+                                            </Col>
+                                        </Row>
                                     </Container>
                                     )
                             }
