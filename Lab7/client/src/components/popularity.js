@@ -29,7 +29,7 @@ render(){
                                             return <div class="col"><Card style={{ marginTop:'100px',marginBottom:'100px',width: '25rem',background:'white'}}>
                                             <Card.Img variant="top" src={value.url} style={{height:"500px"}} />
                                             <Card.Body style={{padding:'inherit'}}>
-                                            <Card.Title>Poster's Name: {value.poster_name}</Card.Title>
+                                        <Card.Title>Poster's Name: {value.poster_name} Popularity:{value.numBinned}</Card.Title>
                                             <Card.Text>
                                                 Description  {value.description?value.description:"Well Actually Nothing"}
                                             </Card.Text>

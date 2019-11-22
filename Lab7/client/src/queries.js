@@ -38,6 +38,7 @@ query{
     description
     user_posted
     binned
+    numBinned
   }
 }
 `;
