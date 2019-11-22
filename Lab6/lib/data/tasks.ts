@@ -73,6 +73,8 @@ export class Tasks{
             }
         }
         if(taskObject.hoursEstimated){
+            if(isNaN(taskObject.hoursEstimated))
+                throw 'Hours Estimated is not a number';
             if(firstCheck.hoursEstimated===taskObject.hoursEstimated){
                 throw 'Data is same for patch request';
             }

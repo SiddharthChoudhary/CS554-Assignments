@@ -3,12 +3,14 @@ import * as bodyParser from 'body-parser';
 import {Request, Response} from 'express';
 import {Tasks} from './data/tasks';
 import {Comment} from './modals/comment';
+import {Middleware} from './config/middleware';
 import { Task } from './modals/task';
 // import {task} from './modals/task';
 // import tasks from '.tasks';
 
 class App {
     public tasksData:Tasks = new Tasks();
+    public middleware:Middleware=new Middleware();
     constructor() {
         this.app = express();
         this.config();
@@ -26,6 +28,8 @@ class App {
     // const router = express.Router();
     router.get("/api/tasks/", async(req:Request,res:Response)=>{
         try {   
+            this.middleware.urlLogger(req,res);
+            this.middleware.requestLogger(req,res);
             let { skip=0, take=20 } = req.query;
         if (skip) {
             if (!Number.isInteger(parseFloat(skip))) {
@@ -49,6 +53,8 @@ class App {
     })
     router.get("/api/tasks/:id",async(req:Request,res:Response)=>{
         try{
+        this.middleware.urlLogger(req,res);
+        this.middleware.requestLogger(req,res);
         const tasks = await this.tasksData.getTasksById(req.params.id);
         res.json(tasks);
         }catch(e){
@@ -57,7 +63,9 @@ class App {
     })
     router.post('/api/tasks', async (req:Request, res:Response) => {
         const {title,description,hoursEstimated} = req.body;
-        if (!title || !description || !hoursEstimated) {
+        this.middleware.urlLogger(req,res);
+        this.middleware.requestLogger(req,res);
+        if(!title|| typeof title !== "string" || !description || typeof description !== "string" || !hoursEstimated || isNaN(hoursEstimated)){
             return res.status(500).json({ status: 500, error: 'The required information is not given!' });
         }
         const tasks = new Task(title,description,hoursEstimated,false,[]);
@@ -73,6 +81,8 @@ class App {
     });
     router.put("/api/tasks/:id",async(req:Request,res:Response)=>{
         try{
+            this.middleware.urlLogger(req,res);
+            this.middleware.requestLogger(req,res);
             const objec = req.body;
             if(!req.params.id){
                 return res.status(500).json({error:"Object is not formatted"});
@@ -89,6 +99,8 @@ class App {
     })
     router.patch("/api/tasks/:id",async(req:Request,res:Response)=>{
         try{
+            this.middleware.urlLogger(req,res);
+            this.middleware.requestLogger(req,res);
             const objec = req.body;
             const task = await this.tasksData.patchATask(req.params.id,objec);
             res.json(task);
@@ -98,9 +110,11 @@ class App {
     })
     router.post("/api/tasks/:id/comments",async(req:Request,res:Response)=>{
         try{
+            this.middleware.urlLogger(req,res);
+            this.middleware.requestLogger(req,res);
             let {name,comment} = req.body;
             let commentObject = new Comment(name,comment);
-            if(typeof comment != 'string' || typeof name != 'string'){
+            if(!comment ||typeof comment != 'string' || !name || typeof name != 'string'){
                 return res.status(500).json({error:"Comment or name is not string"});
             }
             const task = await this.tasksData.postAComment(commentObject,req.params.id)
@@ -111,6 +125,8 @@ class App {
     })
     router.delete("/api/tasks/:taskId/:commentId",async(req:Request,res:Response)=>{
         try{
+            this.middleware.urlLogger(req,res);
+            this.middleware.requestLogger(req,res);
             const task = await this.tasksData.deleteAComment(req.params.taskId,req.params.commentId)
             res.json(task)
         }catch(e){

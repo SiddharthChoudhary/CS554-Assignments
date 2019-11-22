@@ -4,7 +4,6 @@
   "description": "typescript implementation",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node ./lib/server.ts",
     "start": "tsc && node ./dist/server.js"
   },
